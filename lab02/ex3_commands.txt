@@ -3,3 +3,13 @@
 # Lines starting with # are comments, feel free to add any to document your commands
 
 # Please add your commands below this line
+b check_number
+n
+s
+bt
+breakpoint set --file pwd_checker.c --line 31 --condition "letter == '0'"
+c
+p is_in_range
+p lower
+p upper
+q
