@@ -6,7 +6,10 @@
 # The return value should be stored in a0
 f:
     # Your code here
-
+    addi t0 a0 3 # cal index(value + 3)
+    slli t0 t0 2 # cal the offset
+    add t0 t0 a1 # cal the address of the element
+    lw a0 0(t0)  # load the value
     # This is how you return from a function. You'll learn more about this later.
     # This should be the last line in your program.
     jr ra
