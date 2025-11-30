@@ -57,7 +57,7 @@ mv s6, x0 #let i = 0
 mv s7, x0 #let j = 0
 mv s8, a2 # number of elements for dot function
 
-
+ebreak
 outer_loop_start:
     bge s6, s3, outer_loop_end
     mv a0, s0
@@ -69,7 +69,7 @@ outer_loop_start:
 
 inner_loop_start:
     bge s7, s4, inner_loop_end
-    ebreak
+    
     jal ra, dot
     sw a0,0(s2) #write value to p[index]
 

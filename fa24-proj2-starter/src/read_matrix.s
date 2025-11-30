@@ -25,18 +25,107 @@
 #     this function terminates the program with error code 29
 # ==============================================================================
 read_matrix:
-
     # Prologue
+    addi sp, sp, -28
+    sw s0, 0(sp) #store filename
+    sw s1, 4(sp) #store rows
+    sw s2, 8(sp) #store cols
+    sw s3, 12(sp) #file descriptor
+    sw s4, 16(sp) #bytes of contents
+    sw s5, 20(sp) #matrix pointer
+    sw ra, 24(sp)
 
+    #store file name
+    mv s1, a1
+    mv s2, a2
 
+    #open file
+    mv a1, x0
+    jal ra, fopen
+    blt a0, x0, fopenError
+    mv s3, a0 #s3 stores the file descriptor
 
+    #read rows and cols (8 bytes) of the file
+    addi a2, x0, 8
+    addi sp, sp, -8 #butter to store the 8 bytes
+    mv a1, sp
+    jal ra, fread
+    
+    addi a2, x0, 8
+    bne a2, a0, freadError
 
+    lw t0, 0(sp)
+    lw t1, 4(sp)
+    sw t0, 0(s1) #store rows to memory
+    sw t1, 0(s2) #store cols to memory
+    addi sp, sp, 8
 
+    #calculate the bytes of matrix
+    lw t0, 0(s1)
+    lw t1, 0(s2)
+    mul t0, t0, t1 #number of ints
+    addi s4, x0, 4
+    mul s4, s4, t0 #bytes to read
 
+    #malloc
+    mv a0, s4
+    jal ra, malloc
+    beq a0, x0, mallocError
+    mv s5, a0
 
+    #read later contents
+    
+     mv a0, s3
+     mv a1, s5
+     mv a2, s4
+     jal ra, fread
 
+    mv a2, s4
+    bne a2, a0, freadErrorTwo
 
+    #close file
+    mv a0, s3
+    jal ra, fclose
+    blt a0, x0, fcloseError
+    
     # Epilogue
+    mv a0, s5
 
+    lw s0, 0(sp) #store filename
+    lw s1, 4(sp) #store rows
+    lw s2, 8(sp) #store cols
+    lw s3, 12(sp) #file descriptor
+    lw s4, 16(sp) #bytes of contents
+    lw s5, 20(sp) #matrix pointer
+    lw ra, 24(sp)
+    addi sp, sp, 28
 
+    
     jr ra
+
+
+mallocError:
+ li a0, 26
+ j exit
+
+fopenError:
+ li a0, 27
+ j exit
+
+fcloseError:
+ mv a0, s5
+ jal free
+ li a0, 28
+ j exit
+
+freadError:
+ li a0, 29
+ j exit
+
+freadErrorTwo:
+ mv a0, s5
+ jal free
+ li a0, 29
+ j exit
+
+
