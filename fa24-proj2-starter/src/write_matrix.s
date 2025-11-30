@@ -25,16 +25,76 @@
 write_matrix:
 
     # Prologue
+    addi sp, sp, -20
+    sw ra, 0(sp)
+    sw s0, 4(sp)
+    sw s1, 8(sp)
+    sw s2 ,12(sp)
+    sw s3, 16(sp)
+    
+    #s0 to store file descriptor
+    mv s1, a1 #pointer to matrix
+    mv s2, a2 #num of rows
+    mv s3, a3 #num of cols
+
+    #open file
+    addi a1, x0, 1 #write permission
+    jal ra, fopen
+    mv s0, a0
+    blt a0, x0, openError
 
 
+    #write number
+    #store value into buffer
+    addi sp, sp, -8
+    sw s2, 0(sp)
+    sw s3, 4(sp)
 
+    mv a0, s0
+    mv a1, sp
+    addi a2, x0, 2
+    addi a3, x0, 4
+    jal ra, fwrite
+    addi sp, sp, 8
 
+    
+    addi a2, x0, 2
+    bne a0, a2, writeError
 
+    #write later contents
+    mv a0, s0
+    mul a2, s2, s3 #store number of elements
+    addi a3, x0, 4 #bytes per element
+    
+    #store value into buffer
+    mv a1, s1
+    jal ra, fwrite
+    mul a2, s2, s3
+    bne a0, a2, writeError
 
-
-
+    #close the file
+    mv a0, s0
+    jal ra, fclose
+    bne a0, x0, closeError
 
     # Epilogue
-
-
+    lw ra, 0(sp)
+    lw s0, 4(sp)
+    lw s1, 8(sp)
+    lw s2 ,12(sp)
+    lw s3, 16(sp)
+    addi sp, sp, 20
     jr ra
+
+
+openError:
+ li a0, 27
+ j exit
+
+writeError:
+ li a0, 30
+ j exit
+
+closeError:
+ li a0, 28
+ j exit

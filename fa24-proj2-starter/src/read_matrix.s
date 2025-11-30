@@ -35,7 +35,7 @@ read_matrix:
     sw s5, 20(sp) #matrix pointer
     sw ra, 24(sp)
 
-    #store file name
+    #store pointer
     mv s1, a1
     mv s2, a2
 
@@ -45,20 +45,22 @@ read_matrix:
     blt a0, x0, fopenError
     mv s3, a0 #s3 stores the file descriptor
 
-    #read rows and cols (8 bytes) of the file
-    addi a2, x0, 8
-    addi sp, sp, -8 #butter to store the 8 bytes
-    mv a1, sp
+
+    #read row
+    mv a0, s3
+    mv a1, s1
+    addi a2, x0, 4
     jal ra, fread
-    
-    addi a2, x0, 8
+    addi a2, x0, 4
     bne a2, a0, freadError
 
-    lw t0, 0(sp)
-    lw t1, 4(sp)
-    sw t0, 0(s1) #store rows to memory
-    sw t1, 0(s2) #store cols to memory
-    addi sp, sp, 8
+    #read col
+    mv a0, s3
+    mv a1, s2
+    addi a2, x0, 4
+    jal ra, fread
+    addi a2, x0, 4
+    bne a2, a0, freadError
 
     #calculate the bytes of matrix
     lw t0, 0(s1)
@@ -70,11 +72,12 @@ read_matrix:
     #malloc
     mv a0, s4
     jal ra, malloc
-    beq a0, x0, mallocError
     mv s5, a0
+    ebreak
+    beq a0, x0, mallocError
+    
 
     #read later contents
-    
      mv a0, s3
      mv a1, s5
      mv a2, s4
@@ -100,7 +103,6 @@ read_matrix:
     lw ra, 24(sp)
     addi sp, sp, 28
 
-    
     jr ra
 
 
