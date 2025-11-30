@@ -34,7 +34,6 @@ dot:
 
 loop_start:
     bge x0, a2, loop_end
-
     # nth value of array
     lw t1, 0(a0) 
     lw t2, 0(a1)
