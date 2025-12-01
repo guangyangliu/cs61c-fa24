@@ -73,7 +73,7 @@ read_matrix:
     mv a0, s4
     jal ra, malloc
     mv s5, a0
-    ebreak
+    
     beq a0, x0, mallocError
     
 
