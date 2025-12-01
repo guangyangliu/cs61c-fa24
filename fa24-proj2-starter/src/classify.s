@@ -186,24 +186,34 @@ classify:
     freeMalloc:
     mv a0, s1
     jal free
+
     mv a0, s2
     jal free
+
     mv a0, s3
     jal free
+
     mv a0, s4
     jal free
+
     mv a0, s5
     jal free
+
     mv a0, s6
     jal free
+
     mv a0, s7
     jal free
+
     mv a0, s8
     jal free
+
     mv a0, s9
     jal free
+
     mv a0, s10
     jal free
+
     mv a0, s11
     jal free
 
