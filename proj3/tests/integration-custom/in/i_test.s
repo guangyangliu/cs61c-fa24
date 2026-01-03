@@ -1,7 +1,7 @@
-addi t0, x0, 1
-addi t0, x0, 42
-addi t0, x0, 256
-addi t0, x0, 2047
+addi t0, t1, 1
+addi t0, t2, 42
+addi t0, s0, 256
+addi t0, a1, 2047
 
 andi t0, t1, 1
 andi t0, x0, 42
@@ -9,8 +9,8 @@ andi t0, t2, 256
 andi t1, t0, 2047
 
 ori t0, t1, 1
-ori t0, x0, 1
-ori t0, x0, 2
+ori t0, t2, 1
+ori t0, s0, 2
 ori t0, t1, 4
 
 slli t0, t1, 1
@@ -34,7 +34,7 @@ srli t1, t0, 2
 srli t2, t1, 3
 srli t0, t2, 4
 
-xori t0, x0, 0
-xori t1, t0, 2
-xori t0, x0, 3
+xori t0, t2, 0
+xori t1, a0, 2
+xori t0, s1, 3
 xori t0, t0, 4
